@@ -1,6 +1,6 @@
 import Ship from "./ship";
 
-const Gameboard = (sizeX, sizeY) => {
+const Gameboard = (name, sizeX = 10, sizeY = 10) => {
   const grid = [];
   const ships = [];
 
@@ -81,6 +81,9 @@ const Gameboard = (sizeX, sizeY) => {
     getShips,
     receiveAttack,
     gameOver,
+    sizeX,
+    name,
+    sizeY,
   };
 };
 
