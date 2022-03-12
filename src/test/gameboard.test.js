@@ -34,7 +34,7 @@ describe("Gameboard factory", () => {
   describe("Placing ships", () => {
     test("Placing 2 tile ship - horizontal", () => {
       const gameboard = Gameboard(undefined, 2, 3);
-      gameboard.placeShip(1, 0, 2);
+      gameboard.placeShip(1, 0, 2, false);
       expect(gameboard.getGrid()).toEqual([
         [
           { type: "ocean", id: -1 },
@@ -90,15 +90,35 @@ describe("Gameboard factory", () => {
       ]);
     });
 
+    test("Cannot place ships to adjecent ship tiles", () => {
+      const gameboard = Gameboard(undefined, 8, 8);
+      expect(gameboard.placeShip(1, 0, 3, false)).toBe(0);
+      expect(gameboard.placeShip(2, 3, 1, false)).toBe(-1);
+      expect(gameboard.placeShip(3, 3, 2, true)).toBe(0);
+      expect(gameboard.placeShip(3, 1, 2, true)).toBe(0);
+      expect(gameboard.placeShip(1, 7, 3, true)).toBe(0);
+      expect(gameboard.placeShip(4, 6, 2, false)).toBe(-1);
+      expect(gameboard.placeShip(4, 6, 3, false)).toBe(-1);
+      expect(gameboard.placeShip(5, 2, 3, true)).toBe(-1);
+      expect(gameboard.placeShip(7, 3, 3, false)).toBe(0);
+      expect(gameboard.placeShip(6, 7, 2, true)).toBe(0);
+      expect(gameboard.placeShip(0, 4, 2, true)).toBe(0);
+    });
+
     test("Multiple ships with different ID", () => {
-      const gameboard = Gameboard(undefined, 2, 3);
+      const gameboard = Gameboard(undefined, 3, 3);
       gameboard.placeShip(0, 0, 2, false);
-      gameboard.placeShip(1, 0, 3, false);
+      gameboard.placeShip(2, 0, 3, false);
       expect(gameboard.getShips()[1].getLength()).toBe(3);
       expect(gameboard.getGrid()).toEqual([
         [
           { type: "ship", id: 0, shipLocation: 0 },
           { type: "ship", id: 0, shipLocation: 1 },
+          { type: "ocean", id: -1 },
+        ],
+        [
+          { type: "ocean", id: -1 },
+          { type: "ocean", id: -1 },
           { type: "ocean", id: -1 },
         ],
         [
@@ -169,12 +189,12 @@ describe("Gameboard factory", () => {
     });
 
     test("Sinking a ship", () => {
-      const gameboard = Gameboard(undefined, 2, 2);
+      const gameboard = Gameboard(undefined, 3, 3);
       gameboard.placeShip(0, 0, 2);
-      gameboard.placeShip(1, 0, 2);
+      gameboard.placeShip(2, 0, 2);
       gameboard.receiveAttack(0, 0);
       gameboard.receiveAttack(0, 1);
-      gameboard.receiveAttack(1, 0);
+      gameboard.receiveAttack(2, 0);
       expect(gameboard.getShips()[0].isSunk()).toBeTruthy();
       expect(gameboard.getShips()[1].isSunk()).toBeFalsy();
     });

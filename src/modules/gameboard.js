@@ -24,6 +24,21 @@ const Gameboard = (name, sizeX = 10, sizeY = 10) => {
             break;
           }
         }
+        for (let i = posY - 1; i < posY - 1 + shipLength + 2; i += 1) {
+          if (i >= 0 && i < sizeX) {
+            for (let j = posX - 1; j < posX - 1 + 3; j += 1) {
+              if (j >= 0 && j < sizeY) {
+                if (j === posX) {
+                  j += 1;
+                  if (j >= sizeY) break;
+                }
+                if (grid[i][j].type === "ship") {
+                  space = false;
+                }
+              }
+            }
+          }
+        }
       }
     } else {
       space = posX + shipLength - 1 < sizeY;
@@ -32,6 +47,21 @@ const Gameboard = (name, sizeX = 10, sizeY = 10) => {
           if (grid[posY][posX + i].type === "ship") {
             space = false;
             break;
+          }
+        }
+        for (let i = posY - 1; i < posY - 1 + 3; i += 1) {
+          if (i >= 0 && i < sizeX) {
+            for (let j = posX - 1; j < posX - 1 + shipLength + 2; j += 1) {
+              if (j >= 0 && j < sizeY) {
+                if (j === posX && i === posY) {
+                  j += shipLength;
+                  if (j >= sizeY) break;
+                }
+                if (grid[i][j].type === "ship") {
+                  space = false;
+                }
+              }
+            }
           }
         }
       }
