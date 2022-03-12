@@ -1,36 +1,36 @@
 import Ship from "./ship";
 
-const Gameboard = (name, sizeX = 10, sizeY = 10) => {
+const Gameboard = (name, rowSize = 10, columnSize = 10) => {
   const grid = [];
   const ships = [];
 
   const populateBoard = () => {
-    for (let i = 0; i < sizeX; i += 1) {
+    for (let i = 0; i < rowSize; i += 1) {
       grid.push([]);
-      for (let j = 0; j < sizeY; j += 1) {
+      for (let j = 0; j < columnSize; j += 1) {
         grid[i].push({ type: "ocean", id: -1 });
       }
     }
   };
 
-  const checkAvailableSpace = (posY, posX, shipLength, vert) => {
+  const checkAvailableSpace = (row, column, shipLength, vert) => {
     let space;
     if (vert) {
-      space = posY + shipLength - 1 < sizeX;
+      space = row + shipLength - 1 < rowSize;
       if (space) {
         for (let i = 0; i < shipLength; i += 1) {
-          if (grid[posY + i][posX].type === "ship") {
+          if (grid[row + i][column].type === "ship") {
             space = false;
             break;
           }
         }
-        for (let i = posY - 1; i < posY - 1 + shipLength + 2; i += 1) {
-          if (i >= 0 && i < sizeX) {
-            for (let j = posX - 1; j < posX - 1 + 3; j += 1) {
-              if (j >= 0 && j < sizeY) {
-                if (j === posX) {
+        for (let i = row - 1; i < row - 1 + shipLength + 2; i += 1) {
+          if (i >= 0 && i < rowSize) {
+            for (let j = column - 1; j < column - 1 + 3; j += 1) {
+              if (j >= 0 && j < columnSize) {
+                if (j === column) {
                   j += 1;
-                  if (j >= sizeY) break;
+                  if (j >= columnSize) break;
                 }
                 if (grid[i][j].type === "ship") {
                   space = false;
@@ -41,21 +41,21 @@ const Gameboard = (name, sizeX = 10, sizeY = 10) => {
         }
       }
     } else {
-      space = posX + shipLength - 1 < sizeY;
+      space = column + shipLength - 1 < columnSize;
       if (space) {
         for (let i = 0; i < shipLength; i += 1) {
-          if (grid[posY][posX + i].type === "ship") {
+          if (grid[row][column + i].type === "ship") {
             space = false;
             break;
           }
         }
-        for (let i = posY - 1; i < posY - 1 + 3; i += 1) {
-          if (i >= 0 && i < sizeX) {
-            for (let j = posX - 1; j < posX - 1 + shipLength + 2; j += 1) {
-              if (j >= 0 && j < sizeY) {
-                if (j === posX && i === posY) {
+        for (let i = row - 1; i < row - 1 + 3; i += 1) {
+          if (i >= 0 && i < rowSize) {
+            for (let j = column - 1; j < column - 1 + shipLength + 2; j += 1) {
+              if (j >= 0 && j < columnSize) {
+                if (j === column && i === row) {
                   j += shipLength;
-                  if (j >= sizeY) break;
+                  if (j >= columnSize) break;
                 }
                 if (grid[i][j].type === "ship") {
                   space = false;
@@ -69,33 +69,33 @@ const Gameboard = (name, sizeX = 10, sizeY = 10) => {
     return space;
   };
 
-  const placeShip = (posY, posX, shipLength, vert) => {
-    if (!checkAvailableSpace(posY, posX, shipLength, vert)) return -1;
+  const placeShip = (row, column, shipLength, vert) => {
+    if (!checkAvailableSpace(row, column, shipLength, vert)) return -1;
     if (vert) {
       for (let i = 0; i < shipLength; i += 1) {
-        grid[posY + i][posX] = { type: "ship", id: ships.length, shipLocation: i };
+        grid[row + i][column] = { type: "ship", id: ships.length, shipLocation: i };
       }
     } else {
       for (let i = 0; i < shipLength; i += 1) {
-        grid[posY][posX + i] = { type: "ship", id: ships.length, shipLocation: i };
+        grid[row][column + i] = { type: "ship", id: ships.length, shipLocation: i };
       }
     }
     ships.push(Ship(shipLength));
     return 0;
   };
 
-  const receiveAttack = (posY, posX) => {
+  const receiveAttack = (row, column) => {
     if (
-      posY < 0
-      || posX < 0
-      || posY >= sizeX
-      || posX >= sizeY
-      || grid[posY][posX].hit !== undefined
+      row < 0
+      || column < 0
+      || row >= rowSize
+      || column >= columnSize
+      || grid[row][column].hit !== undefined
     ) {
       return -1;
     }
-    grid[posY][posX].hit = grid[posY][posX].type === "ship";
-    const currentPos = grid[posY][posX];
+    grid[row][column].hit = grid[row][column].type === "ship";
+    const currentPos = grid[row][column];
     if (currentPos.hit) ships[currentPos.id].hit(currentPos.shipLocation);
     return 0;
   };
@@ -111,9 +111,9 @@ const Gameboard = (name, sizeX = 10, sizeY = 10) => {
     getShips,
     receiveAttack,
     gameOver,
-    sizeX,
+    rowSize,
     name,
-    sizeY,
+    columnSize,
   };
 };
 

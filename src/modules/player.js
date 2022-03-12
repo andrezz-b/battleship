@@ -2,21 +2,21 @@ const Player = (name) => {
   const computer = name === "computer";
   const aiMoves = [];
 
-  const makeMove = (posY, posX, board) => {
+  const makeMove = (row, column, board) => {
     if (!computer) {
-      board.reciveAttack(posY, posX);
+      board.reciveAttack(row, column);
     } else {
       let illegal = true;
       while (illegal) {
-        const y = Math.floor(Math.random() * board.sizeY);
-        const x = Math.floor(Math.random() * board.sizeX);
-        if (!aiMoves.some((el) => el.x === x && el.y === y)) {
-          aiMoves.push({ y, x });
+        const rowRand = Math.floor(Math.random() * board.sizeY);
+        const columnRand = Math.floor(Math.random() * board.sizeX);
+        if (!aiMoves.some((move) => move.columnRand === columnRand && move.rowRand === rowRand)) {
+          aiMoves.push({ rowRand, columnRand });
           illegal = false;
         }
       }
-      const { x, y } = aiMoves[aiMoves.length - 1];
-      board.reciveAttack(y, x);
+      const { rowRand, columnRand } = aiMoves[aiMoves.length - 1];
+      board.reciveAttack(rowRand, columnRand);
     }
   };
   return { makeMove };
