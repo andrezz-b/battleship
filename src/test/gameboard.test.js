@@ -129,7 +129,7 @@ describe("Gameboard factory", () => {
       ]);
     });
 
-    test("Rotating a ship - successful", () => {
+    test("Rotating a ship - horizontal -> vertical", () => {
       const gameboard = Gameboard(undefined, 3, 3);
       gameboard.placeShip(1, 1, 2, false);
       gameboard.rotateShip({ rowTip: 1, columnTip: 1 });
@@ -147,6 +147,54 @@ describe("Gameboard factory", () => {
         [
           { type: "ocean", id: -1 },
           { type: "ship", id: { rowTip: 1, columnTip: 1 }, shipLocation: 1 },
+          { type: "ocean", id: -1 },
+        ],
+      ]);
+    });
+
+    test("Rotating a ship - vertical -> horizontal", () => {
+      const gameboard = Gameboard(undefined, 3, 3);
+      gameboard.placeShip(1, 1, 2, true);
+      expect(gameboard.rotateShip({ rowTip: 1, columnTip: 1 })).toBe(0);
+      expect(gameboard.getGrid()).toEqual([
+        [
+          { type: "ocean", id: -1 },
+          { type: "ocean", id: -1 },
+          { type: "ocean", id: -1 },
+        ],
+        [
+          { type: "ocean", id: -1 },
+          { type: "ship", id: { rowTip: 1, columnTip: 1 }, shipLocation: 0 },
+          { type: "ship", id: { rowTip: 1, columnTip: 1 }, shipLocation: 1 },
+        ],
+        [
+          { type: "ocean", id: -1 },
+          { type: "ocean", id: -1 },
+          { type: "ocean", id: -1 },
+        ],
+      ]);
+    });
+
+    test("Rotating a ship - fail", () => {
+      const gameboard = Gameboard(undefined, 3, 3);
+      gameboard.placeShip(0, 0, 2, false);
+      gameboard.placeShip(2, 0, 2, false);
+      expect(gameboard.rotateShip({ rowTip: 0, columnTip: 0 })).toBe(-1);
+      expect(gameboard.getShips()[0].id).toEqual({ rowTip: 0, columnTip: 0 });
+      expect(gameboard.getGrid()).toEqual([
+        [
+          { type: "ship", id: { rowTip: 0, columnTip: 0 }, shipLocation: 0 },
+          { type: "ship", id: { rowTip: 0, columnTip: 0 }, shipLocation: 1 },
+          { type: "ocean", id: -1 },
+        ],
+        [
+          { type: "ocean", id: -1 },
+          { type: "ocean", id: -1 },
+          { type: "ocean", id: -1 },
+        ],
+        [
+          { type: "ship", id: { rowTip: 2, columnTip: 0 }, shipLocation: 0 },
+          { type: "ship", id: { rowTip: 2, columnTip: 0 }, shipLocation: 1 },
           { type: "ocean", id: -1 },
         ],
       ]);

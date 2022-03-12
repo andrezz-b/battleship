@@ -162,6 +162,7 @@ const Gameboard = (name, rowSize = 10, columnSize = 10) => {
 
   const rotateShip = (shipID) => {
     const { rowTip: row, columnTip: column } = shipID;
+    const shipLength = getShip(shipID).getLength();
     const vert = row + 1 < rowSize ? grid[row + 1][column].type === "ship" : false;
     // Remove ship, if it is needed again move to a function
     if (!vert) {
@@ -170,8 +171,16 @@ const Gameboard = (name, rowSize = 10, columnSize = 10) => {
           grid[row].splice(col, 1, { type: "ocean", id: -1 });
         }
       });
-      placeShip(row, column, 2, true);
+      if (!placeShip(row, column, shipLength, true)) return 0;
+      placeShip(row, column, shipLength, false);
+      return -1;
     }
+    for (let i = row; i < row + shipLength; i += 1) {
+      grid[i].splice(column, 1, { type: "ocean", id: -1 });
+    }
+    if (!placeShip(row, column, shipLength, false)) return 0;
+    placeShip(row, column, shipLength, true);
+    return -1;
   };
 
   populateBoard();
