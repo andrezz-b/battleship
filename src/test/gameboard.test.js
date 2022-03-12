@@ -200,14 +200,62 @@ describe("Gameboard factory", () => {
     });
 
     test("Sinking all of the ships", () => {
-      const gameboard = Gameboard(undefined, 2, 2);
+      const gameboard = Gameboard(undefined, 3, 3);
       gameboard.placeShip(0, 0, 2);
-      gameboard.placeShip(1, 0, 2);
+      gameboard.placeShip(2, 0, 2);
       gameboard.receiveAttack(0, 0);
       gameboard.receiveAttack(0, 1);
-      gameboard.receiveAttack(1, 0);
-      gameboard.receiveAttack(1, 1);
+      gameboard.receiveAttack(2, 0);
+      gameboard.receiveAttack(2, 1);
       expect(gameboard.gameOver()).toBeTruthy();
+    });
+
+    test("Sinking a ship marks all of the adjecent tiles as misses", () => {
+      const gameboard = Gameboard(undefined, 4, 4);
+      gameboard.placeShip(1, 1, 2, false);
+      gameboard.placeShip(3, 3, 1, false);
+      gameboard.placeShip(3, 0, 1, false);
+      gameboard.receiveAttack(1, 1);
+      gameboard.receiveAttack(1, 2);
+      gameboard.receiveAttack(3, 3);
+      gameboard.receiveAttack(3, 0);
+      expect(gameboard.getShips()[0].isSunk()).toBeTruthy();
+      expect(gameboard.getShips()[1].isSunk()).toBeTruthy();
+      expect(gameboard.getShips()[2].isSunk()).toBeTruthy();
+      expect(gameboard.getGrid()).toEqual([
+        [
+          { type: "ocean", id: -1, hit: false },
+          { type: "ocean", id: -1, hit: false },
+          { type: "ocean", id: -1, hit: false },
+          { type: "ocean", id: -1, hit: false },
+        ],
+        [
+          { type: "ocean", id: -1, hit: false },
+          {
+            type: "ship", id: 0, shipLocation: 0, hit: true,
+          },
+          {
+            type: "ship", id: 0, shipLocation: 1, hit: true,
+          },
+          { type: "ocean", id: -1, hit: false },
+        ],
+        [
+          { type: "ocean", id: -1, hit: false },
+          { type: "ocean", id: -1, hit: false },
+          { type: "ocean", id: -1, hit: false },
+          { type: "ocean", id: -1, hit: false },
+        ],
+        [
+          {
+            type: "ship", id: 2, shipLocation: 0, hit: true,
+          },
+          { type: "ocean", id: -1, hit: false },
+          { type: "ocean", id: -1, hit: false },
+          {
+            type: "ship", id: 1, shipLocation: 0, hit: true,
+          },
+        ],
+      ]);
     });
   });
 });

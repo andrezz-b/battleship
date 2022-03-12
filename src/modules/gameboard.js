@@ -12,6 +12,48 @@ const Gameboard = (name, rowSize = 10, columnSize = 10) => {
       }
     }
   };
+  const findShipTip = (id) => {
+    for (let i = 0; i < rowSize; i += 1) {
+      for (let j = 0; j < columnSize; j += 1) {
+        const { id: shipID, shipLocation } = grid[i][j];
+        if (shipID === id && shipLocation === 0) return { row: i, column: j };
+      }
+    }
+    return -1;
+  };
+
+  const markEmpty = (row, column, shipLength) => {
+    const vert = row + 1 < rowSize ? grid[row + 1][column].type === "ship" : false;
+    if (vert) {
+      for (let i = row - 1; i < row - 1 + shipLength + 2; i += 1) {
+        if (i >= 0 && i < rowSize) {
+          for (let j = column - 1; j < column - 1 + 3; j += 1) {
+            if (j >= 0 && j < columnSize) {
+              if (j === column) {
+                j += 1;
+                if (j >= columnSize) break;
+              }
+              grid[i][j].hit = false;
+            }
+          }
+        }
+      }
+    } else {
+      for (let i = row - 1; i < row - 1 + 3; i += 1) {
+        if (i >= 0 && i < rowSize) {
+          for (let j = column - 1; j < column - 1 + shipLength + 2; j += 1) {
+            if (j >= 0 && j < columnSize) {
+              if (j === column && i === row) {
+                j += shipLength;
+                if (j >= columnSize) break;
+              }
+              grid[i][j].hit = false;
+            }
+          }
+        }
+      }
+    }
+  };
 
   const checkAvailableSpace = (row, column, shipLength, vert) => {
     let space;
@@ -95,12 +137,20 @@ const Gameboard = (name, rowSize = 10, columnSize = 10) => {
       return -1;
     }
     grid[row][column].hit = grid[row][column].type === "ship";
-    const currentPos = grid[row][column];
-    if (currentPos.hit) ships[currentPos.id].hit(currentPos.shipLocation);
+    const { id, shipLocation, hit } = grid[row][column];
+    if (hit) {
+      ships[id].hit(shipLocation);
+      if (ships[id].isSunk()) {
+        const { row: rowTip, column: columnTip } = findShipTip(id);
+        const shipLength = ships[id].getLength();
+        markEmpty(rowTip, columnTip, shipLength);
+      }
+    }
     return 0;
   };
 
   populateBoard();
+
   const gameOver = () => !ships.find((ship) => !ship.isSunk());
   const getGrid = () => grid;
   const getShips = () => ships;
