@@ -185,6 +185,18 @@ const Gameboard = (name, rowSize = 10, columnSize = 10) => {
 
   populateBoard();
 
+  const placeRandom = () => {
+    const availableShips = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1];
+    while (availableShips.length > 0) {
+      const row = Math.floor(Math.random() * rowSize);
+      const column = Math.floor(Math.random() * columnSize);
+      const vert = !!Math.floor(Math.random() * 2);
+      if (!placeShip(row, column, availableShips[0], vert)) {
+        availableShips.splice(0, 1);
+      }
+    }
+    return 0;
+  };
   const gameOver = () => !ships.find((ship) => !ship.isSunk());
   const getGrid = () => grid;
   const getShips = () => ships;
@@ -196,6 +208,7 @@ const Gameboard = (name, rowSize = 10, columnSize = 10) => {
     receiveAttack,
     gameOver,
     rotateShip,
+    placeRandom,
     rowSize,
     name,
     columnSize,

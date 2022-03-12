@@ -199,6 +199,12 @@ describe("Gameboard factory", () => {
         ],
       ]);
     });
+
+    test("Filling up the board with random ship placments", () => {
+      const gameboard = Gameboard();
+      gameboard.placeRandom();
+      expect(gameboard.getShips().length).toBe(10);
+    });
   });
 
   describe("Receiving attacks", () => {
