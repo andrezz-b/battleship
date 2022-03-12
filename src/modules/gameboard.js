@@ -4,6 +4,10 @@ const Gameboard = (name, rowSize = 10, columnSize = 10) => {
   const grid = [];
   const ships = [];
 
+  const getShip = ({ rowTip, columnTip }) =>
+    // eslint-disable-next-line implicit-arrow-linebreak
+    ships.find((ship) => ship.id.rowTip === rowTip && ship.id.columnTip === columnTip);
+
   const populateBoard = () => {
     for (let i = 0; i < rowSize; i += 1) {
       grid.push([]);
@@ -11,15 +15,6 @@ const Gameboard = (name, rowSize = 10, columnSize = 10) => {
         grid[i].push({ type: "ocean", id: -1 });
       }
     }
-  };
-  const findShipTip = (id) => {
-    for (let i = 0; i < rowSize; i += 1) {
-      for (let j = 0; j < columnSize; j += 1) {
-        const { id: shipID, shipLocation } = grid[i][j];
-        if (shipID === id && shipLocation === 0) return { row: i, column: j };
-      }
-    }
-    return -1;
   };
 
   const markEmpty = (row, column, shipLength) => {
@@ -113,16 +108,31 @@ const Gameboard = (name, rowSize = 10, columnSize = 10) => {
 
   const placeShip = (row, column, shipLength, vert) => {
     if (!checkAvailableSpace(row, column, shipLength, vert)) return -1;
+    const ship = Ship(shipLength);
+    ship.id = { rowTip: row, columnTip: column };
+    if (
+      !ships.some((el) => el.id.rowTip === ship.id.rowTip && el.id.columnTip === ship.id.columnTip)
+    ) {
+      ships.push(ship);
+    }
     if (vert) {
       for (let i = 0; i < shipLength; i += 1) {
-        grid[row + i][column] = { type: "ship", id: ships.length, shipLocation: i };
+        grid[row + i][column] = {
+          type: "ship",
+          id: { rowTip: row, columnTip: column },
+          shipLocation: i,
+        };
       }
     } else {
       for (let i = 0; i < shipLength; i += 1) {
-        grid[row][column + i] = { type: "ship", id: ships.length, shipLocation: i };
+        grid[row][column + i] = {
+          type: "ship",
+          id: { rowTip: row, columnTip: column },
+          shipLocation: i,
+        };
       }
     }
-    ships.push(Ship(shipLength));
+
     return 0;
   };
 
@@ -138,15 +148,30 @@ const Gameboard = (name, rowSize = 10, columnSize = 10) => {
     }
     grid[row][column].hit = grid[row][column].type === "ship";
     const { id, shipLocation, hit } = grid[row][column];
+    const ship = getShip(id);
     if (hit) {
-      ships[id].hit(shipLocation);
-      if (ships[id].isSunk()) {
-        const { row: rowTip, column: columnTip } = findShipTip(id);
-        const shipLength = ships[id].getLength();
+      ship.hit(shipLocation);
+      if (ship.isSunk()) {
+        const { rowTip, columnTip } = id;
+        const shipLength = ship.getLength();
         markEmpty(rowTip, columnTip, shipLength);
       }
     }
     return 0;
+  };
+
+  const rotateShip = (shipID) => {
+    const { rowTip: row, columnTip: column } = shipID;
+    const vert = row + 1 < rowSize ? grid[row + 1][column].type === "ship" : false;
+    // Remove ship, if it is needed again move to a function
+    if (!vert) {
+      grid[row].forEach((el, col) => {
+        if (el.id.rowTip === row && el.id.columnTip === column) {
+          grid[row].splice(col, 1, { type: "ocean", id: -1 });
+        }
+      });
+      placeShip(row, column, 2, true);
+    }
   };
 
   populateBoard();
@@ -161,6 +186,7 @@ const Gameboard = (name, rowSize = 10, columnSize = 10) => {
     getShips,
     receiveAttack,
     gameOver,
+    rotateShip,
     rowSize,
     name,
     columnSize,

@@ -42,8 +42,8 @@ describe("Gameboard factory", () => {
           { type: "ocean", id: -1 },
         ],
         [
-          { type: "ship", id: 0, shipLocation: 0 },
-          { type: "ship", id: 0, shipLocation: 1 },
+          { type: "ship", id: { rowTip: 1, columnTip: 0 }, shipLocation: 0 },
+          { type: "ship", id: { rowTip: 1, columnTip: 0 }, shipLocation: 1 },
           { type: "ocean", id: -1 },
         ],
       ]);
@@ -55,12 +55,12 @@ describe("Gameboard factory", () => {
       expect(gameboard.getGrid()).toEqual([
         [
           { type: "ocean", id: -1 },
-          { type: "ship", id: 0, shipLocation: 0 },
+          { type: "ship", id: { rowTip: 0, columnTip: 1 }, shipLocation: 0 },
           { type: "ocean", id: -1 },
         ],
         [
           { type: "ocean", id: -1 },
-          { type: "ship", id: 0, shipLocation: 1 },
+          { type: "ship", id: { rowTip: 0, columnTip: 1 }, shipLocation: 1 },
           { type: "ocean", id: -1 },
         ],
       ]);
@@ -79,12 +79,12 @@ describe("Gameboard factory", () => {
       expect(gameboard.getGrid()).toEqual([
         [
           { type: "ocean", id: -1 },
-          { type: "ship", id: 0, shipLocation: 0 },
+          { type: "ship", id: { rowTip: 0, columnTip: 1 }, shipLocation: 0 },
           { type: "ocean", id: -1 },
         ],
         [
           { type: "ocean", id: -1 },
-          { type: "ship", id: 0, shipLocation: 1 },
+          { type: "ship", id: { rowTip: 0, columnTip: 1 }, shipLocation: 1 },
           { type: "ocean", id: -1 },
         ],
       ]);
@@ -112,8 +112,8 @@ describe("Gameboard factory", () => {
       expect(gameboard.getShips()[1].getLength()).toBe(3);
       expect(gameboard.getGrid()).toEqual([
         [
-          { type: "ship", id: 0, shipLocation: 0 },
-          { type: "ship", id: 0, shipLocation: 1 },
+          { type: "ship", id: { rowTip: 0, columnTip: 0 }, shipLocation: 0 },
+          { type: "ship", id: { rowTip: 0, columnTip: 0 }, shipLocation: 1 },
           { type: "ocean", id: -1 },
         ],
         [
@@ -122,9 +122,32 @@ describe("Gameboard factory", () => {
           { type: "ocean", id: -1 },
         ],
         [
-          { type: "ship", id: 1, shipLocation: 0 },
-          { type: "ship", id: 1, shipLocation: 1 },
-          { type: "ship", id: 1, shipLocation: 2 },
+          { type: "ship", id: { rowTip: 2, columnTip: 0 }, shipLocation: 0 },
+          { type: "ship", id: { rowTip: 2, columnTip: 0 }, shipLocation: 1 },
+          { type: "ship", id: { rowTip: 2, columnTip: 0 }, shipLocation: 2 },
+        ],
+      ]);
+    });
+
+    test("Rotating a ship - successful", () => {
+      const gameboard = Gameboard(undefined, 3, 3);
+      gameboard.placeShip(1, 1, 2, false);
+      gameboard.rotateShip({ rowTip: 1, columnTip: 1 });
+      expect(gameboard.getGrid()).toEqual([
+        [
+          { type: "ocean", id: -1 },
+          { type: "ocean", id: -1 },
+          { type: "ocean", id: -1 },
+        ],
+        [
+          { type: "ocean", id: -1 },
+          { type: "ship", id: { rowTip: 1, columnTip: 1 }, shipLocation: 0 },
+          { type: "ocean", id: -1 },
+        ],
+        [
+          { type: "ocean", id: -1 },
+          { type: "ship", id: { rowTip: 1, columnTip: 1 }, shipLocation: 1 },
+          { type: "ocean", id: -1 },
         ],
       ]);
     });
@@ -156,10 +179,10 @@ describe("Gameboard factory", () => {
       expect(gameboard.getShips()[0].getHits()).toEqual([0, 1]);
       expect(gameboard.getGrid()).toEqual([
         [
-          { type: "ship", id: 0, shipLocation: 0 },
+          { type: "ship", id: { rowTip: 0, columnTip: 0 }, shipLocation: 0 },
           {
             type: "ship",
-            id: 0,
+            id: { rowTip: 0, columnTip: 0 },
             shipLocation: 1,
             hit: true,
           },
@@ -232,10 +255,10 @@ describe("Gameboard factory", () => {
         [
           { type: "ocean", id: -1, hit: false },
           {
-            type: "ship", id: 0, shipLocation: 0, hit: true,
+            type: "ship", id: { rowTip: 1, columnTip: 1 }, shipLocation: 0, hit: true,
           },
           {
-            type: "ship", id: 0, shipLocation: 1, hit: true,
+            type: "ship", id: { rowTip: 1, columnTip: 1 }, shipLocation: 1, hit: true,
           },
           { type: "ocean", id: -1, hit: false },
         ],
@@ -247,12 +270,12 @@ describe("Gameboard factory", () => {
         ],
         [
           {
-            type: "ship", id: 2, shipLocation: 0, hit: true,
+            type: "ship", id: { rowTip: 3, columnTip: 0 }, shipLocation: 0, hit: true,
           },
           { type: "ocean", id: -1, hit: false },
           { type: "ocean", id: -1, hit: false },
           {
-            type: "ship", id: 1, shipLocation: 0, hit: true,
+            type: "ship", id: { rowTip: 3, columnTip: 3 }, shipLocation: 0, hit: true,
           },
         ],
       ]);
