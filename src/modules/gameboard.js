@@ -160,30 +160,52 @@ const Gameboard = (name, rowSize = 10, columnSize = 10) => {
     return 0;
   };
 
+  const removeShip = (row, column, shipLength, vert) => {
+    if (!vert) {
+      for (let i = column; i < column + shipLength; i += 1) {
+        grid[row].splice(i, 1, { type: "ocean", id: -1 });
+      }
+    } else {
+      for (let i = row; i < row + shipLength; i += 1) {
+        grid[i].splice(column, 1, { type: "ocean", id: -1 });
+      }
+    }
+  };
+
   const rotateShip = (shipID) => {
     const { rowTip: row, columnTip: column } = shipID;
     const shipLength = getShip(shipID).getLength();
     const vert = row + 1 < rowSize ? grid[row + 1][column].type === "ship" : false;
     // Remove ship, if it is needed again move to a function
     if (!vert) {
-      grid[row].forEach((el, col) => {
-        if (el.id.rowTip === row && el.id.columnTip === column) {
-          grid[row].splice(col, 1, { type: "ocean", id: -1 });
-        }
-      });
+      removeShip(row, column, shipLength, vert);
       if (!placeShip(row, column, shipLength, true)) return 0;
       placeShip(row, column, shipLength, false);
       return -1;
     }
-    for (let i = row; i < row + shipLength; i += 1) {
-      grid[i].splice(column, 1, { type: "ocean", id: -1 });
-    }
+    removeShip(row, column, shipLength, vert);
     if (!placeShip(row, column, shipLength, false)) return 0;
     placeShip(row, column, shipLength, true);
     return -1;
   };
 
   populateBoard();
+
+  const moveShip = (shipID, newRow, newColum) => {
+    const { rowTip: row, columnTip: column } = shipID;
+    if (row === newRow && column === newColum) return -1;
+    const shipLength = getShip(shipID).getLength();
+    const vert = row + 1 < rowSize ? grid[row + 1][column].type === "ship" : false;
+    removeShip(row, column, shipLength, vert);
+    if (!placeShip(newRow, newColum, shipLength, vert)) {
+      ships.forEach((ship, i) => {
+        if (ship.id.rowTip === row && ship.id.columnTip === column) ships.splice(i, 1);
+      });
+      return 0;
+    }
+    placeShip(row, column, shipLength, vert);
+    return -1;
+  };
 
   const placeRandom = () => {
     const availableShips = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1];
@@ -209,6 +231,7 @@ const Gameboard = (name, rowSize = 10, columnSize = 10) => {
     gameOver,
     rotateShip,
     placeRandom,
+    moveShip,
     rowSize,
     name,
     columnSize,

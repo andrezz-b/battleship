@@ -129,6 +129,41 @@ describe("Gameboard factory", () => {
       ]);
     });
 
+    test("Moving a ship - success", () => {
+      const gameboard = Gameboard(undefined, 3, 3);
+      gameboard.placeShip(0, 0, 2, false);
+      expect(gameboard.moveShip({ rowTip: 0, columnTip: 0 }, 2, 1)).toBe(0);
+      expect(gameboard.moveShip({ rowTip: 2, columnTip: 1 }, 0, 0)).toBe(0);
+      expect(gameboard.getShips().length).toBe(1);
+      expect(gameboard.getGrid()).toEqual([
+        [
+          { type: "ship", id: { rowTip: 0, columnTip: 0 }, shipLocation: 0 },
+          { type: "ship", id: { rowTip: 0, columnTip: 0 }, shipLocation: 1 },
+          { type: "ocean", id: -1 },
+        ],
+        [
+          { type: "ocean", id: -1 },
+          { type: "ocean", id: -1 },
+          { type: "ocean", id: -1 },
+        ],
+        [
+          { type: "ocean", id: -1 },
+          { type: "ocean", id: -1 },
+          { type: "ocean", id: -1 },
+        ],
+      ]);
+    });
+
+    test("Moving a ship - fail", () => {
+      const gameboard = Gameboard(undefined, 4, 4);
+      gameboard.placeShip(0, 0, 2, true);
+      gameboard.placeShip(0, 3, 1, false);
+      expect(gameboard.moveShip({ rowTip: 0, columnTip: 0 }, 0, 2)).toBe(-1);
+      expect(gameboard.rotateShip({ rowTip: 0, columnTip: 0 })).toBe(0);
+      expect(gameboard.moveShip({ rowTip: 0, columnTip: 0 }, 1, 2)).toBe(-1);
+      expect(gameboard.getShips().length).toBe(2);
+    });
+
     test("Rotating a ship - horizontal -> vertical", () => {
       const gameboard = Gameboard(undefined, 3, 3);
       gameboard.placeShip(1, 1, 2, false);
