@@ -17,8 +17,8 @@ describe("Player tests", () => {
     const player = Player("computer");
     const mockBoard = {
       grid: [[{}, {}, {}, {}]],
-      sizeX: 4,
-      sizeY: 1,
+      columnSize: 4,
+      rowSize: 1,
       reciveAttack: (y, x) => {
         mockBoard.grid[y][x].hit = true;
       },
@@ -34,8 +34,8 @@ describe("Player tests", () => {
         [{}, {}],
         [{}, {}],
       ],
-      sizeX: 2,
-      sizeY: 2,
+      columnSize: 2,
+      rowSize: 2,
       reciveAttack: (y, x) => {
         mockBoard.grid[y][x].hit = true;
       },
