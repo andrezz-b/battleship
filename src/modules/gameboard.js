@@ -24,7 +24,7 @@ const Gameboard = (name, rowSize = 10, columnSize = 10) => {
         if (i >= 0 && i < rowSize) {
           for (let j = column - 1; j < column - 1 + 3; j += 1) {
             if (j >= 0 && j < columnSize) {
-              if (j === column) {
+              if (j === column && i !== row + shipLength && i !== row - 1) {
                 j += 1;
                 if (j >= columnSize) break;
               }
@@ -65,7 +65,7 @@ const Gameboard = (name, rowSize = 10, columnSize = 10) => {
           if (i >= 0 && i < rowSize) {
             for (let j = column - 1; j < column - 1 + 3; j += 1) {
               if (j >= 0 && j < columnSize) {
-                if (j === column) {
+                if (j === column && i !== row + shipLength && i !== row - 1) {
                   j += 1;
                   if (j >= columnSize) break;
                 }

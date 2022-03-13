@@ -105,6 +105,12 @@ describe("Gameboard factory", () => {
       expect(gameboard.placeShip(0, 4, 2, true)).toBe(0);
     });
 
+    test("Cannot place ships adjecent to ship tiles - 1 length", () => {
+      const gameboard = Gameboard(undefined, 4, 4);
+      expect(gameboard.placeShip(1, 1, 2, true)).toBe(0);
+      expect(gameboard.placeShip(3, 0, 1, true)).toBe(-1);
+    });
+
     test("Multiple ships with different ID", () => {
       const gameboard = Gameboard(undefined, 3, 3);
       gameboard.placeShip(0, 0, 2, false);
