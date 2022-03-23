@@ -22,9 +22,10 @@ const gameLoop = (() => {
 
   const playRound = (tag, data) => {
     const { row, column } = data;
+    if (player.makeMove(row, column, computerBoard) === -1) return -1;
     computer.makeMove(0, 0, playerBoard);
-    player.makeMove(row, column, computerBoard);
     displayController.updateBoard(playerBoard, computerBoard);
+    return 0;
   };
 
   const init = () => {
