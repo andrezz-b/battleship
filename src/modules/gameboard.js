@@ -227,7 +227,7 @@ const Gameboard = (name, rowSize = 10, columnSize = 10) => {
   };
 
   const checkHit = (row, column) => grid[row][column].hit === false;
-
+  const checkReady = () => ships.length === 10;
   const gameOver = () => !ships.find((ship) => !ship.isSunk());
   const getGrid = () => grid;
   const getShips = () => ships;
@@ -240,6 +240,7 @@ const Gameboard = (name, rowSize = 10, columnSize = 10) => {
     gameOver,
     rotateShip,
     placeRandom,
+    checkReady,
     moveShip,
     resetBoard,
     checkHit,

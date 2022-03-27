@@ -4,6 +4,7 @@ import Player from "./modules/player";
 import Gameboard from "./modules/gameboard";
 import displayController from "./modules/displayController";
 import "regenerator-runtime/runtime";
+import setupPlayerBoard from "./modules/setupPlayer";
 
 const PLAYER_NAME = "player";
 const COMPUTER_NAME = "computer";
@@ -15,10 +16,12 @@ const gameLoop = (() => {
   const computer = Player(COMPUTER_NAME);
 
   const setup = () => {
-    playerBoard.placeRandom();
     computerBoard.placeRandom();
-    displayController.renderPlayer(playerBoard);
     displayController.renderPlayer(computerBoard);
+    setupPlayerBoard.init(playerBoard)
+      .then(() => {
+        displayController.renderPlayer(playerBoard);
+      });
   };
 
   const isGameOver = () => {
