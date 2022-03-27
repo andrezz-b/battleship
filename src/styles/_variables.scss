@@ -21,4 +21,5 @@ $clr-bg-dk: #303841;
 
 $clr-accent: #f9b248;
 
-$board-size: 30em;
+$board-size: 30rem;
+$tile-size: calc($board-size / 10);
