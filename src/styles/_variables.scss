@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Fredoka&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fredoka&display=swap");
 @mixin flexCenter($direction: row) {
   display: flex;
   justify-content: center;
@@ -7,14 +7,18 @@
   flex-direction: $direction;
 }
 
-$ff-text: 'Fredoka', sans-serif;
+$ff-text: "Fredoka", sans-serif;
 
 $clr-ocean: lighten(#589fe6, 5%);
 $clr-ocean-bor: #00204a;
 
-$clr-ship:#363636;
+$clr-ship: #363636;
 $clr-ship-lt: lighten(#363636, 30%);
 $clr-hit: #dc2f2f;
 $clr-hit-dk: darken(#fa7b7b, 20%);
+
+$clr-bg-dk: #303841;
+
+$clr-accent: #f9b248;
 
 $board-size: 30em;
