@@ -31,6 +31,33 @@ describe("Gameboard factory", () => {
     ]);
   });
 
+  test("Reset gameboard", () => {
+    const gameboard = Gameboard(undefined, 3, 3);
+    gameboard.placeShip(0, 0, 1, false);
+    gameboard.placeShip(1, 2, 2, true);
+    gameboard.receiveAttack(0, 1);
+    gameboard.resetBoard();
+    expect(gameboard.getShips().length).toBe(0);
+    expect(gameboard.getGrid()).toEqual([
+      [
+        { type: "ocean", id: -1 },
+        { type: "ocean", id: -1 },
+        { type: "ocean", id: -1 },
+      ],
+      [
+        { type: "ocean", id: -1 },
+        { type: "ocean", id: -1 },
+        { type: "ocean", id: -1 },
+      ],
+      [
+        { type: "ocean", id: -1 },
+        { type: "ocean", id: -1 },
+        { type: "ocean", id: -1 },
+      ],
+    ]);
+    expect(gameboard.placeShip(0, 0, 2, false)).toBe(0);
+  });
+
   describe("Placing ships", () => {
     test("Placing 2 tile ship - horizontal", () => {
       const gameboard = Gameboard(undefined, 2, 3);

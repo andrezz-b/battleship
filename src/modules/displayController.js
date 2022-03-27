@@ -3,6 +3,7 @@ import PubSub from "pubsub-js";
 const displayController = (() => {
   const renderPlayer = (board) => {
     const playerBoardDiv = document.querySelector(`[data-player='${board.name}']`);
+    playerBoardDiv.textContent = "";
     for (let row = 0; row < board.rowSize; row += 1) {
       for (let column = 0; column < board.columnSize; column += 1) {
         const tile = document.createElement("div");
@@ -50,9 +51,25 @@ const displayController = (() => {
     });
   };
 
+  const displayWinner = (winner) => {
+    const overlay = document.querySelector(".overlay");
+    const textDiv = overlay.querySelector(".win-name");
+    const playAgain = overlay.querySelector("#play-again");
+    const name = winner.charAt(0).toUpperCase() + winner.slice(1);
+    textDiv.textContent = `${name} wins!`;
+    overlay.classList.add("active");
+    return new Promise((resolve) => {
+      playAgain.addEventListener("click", () => {
+        overlay.classList.remove("active");
+        resolve(2);
+      });
+    });
+  };
+
   return {
     renderPlayer,
     updateBoard,
+    displayWinner,
   };
 })();
 

@@ -219,6 +219,15 @@ const Gameboard = (name, rowSize = 10, columnSize = 10) => {
     }
     return 0;
   };
+
+  const resetBoard = () => {
+    grid.splice(0, grid.length);
+    ships.splice(0, ships.length);
+    populateBoard();
+  };
+
+  const checkHit = (row, column) => grid[row][column].hit === false;
+
   const gameOver = () => !ships.find((ship) => !ship.isSunk());
   const getGrid = () => grid;
   const getShips = () => ships;
@@ -232,6 +241,8 @@ const Gameboard = (name, rowSize = 10, columnSize = 10) => {
     rotateShip,
     placeRandom,
     moveShip,
+    resetBoard,
+    checkHit,
     rowSize,
     name,
     columnSize,

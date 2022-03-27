@@ -4,7 +4,7 @@ const Player = (name) => {
 
   const makeMove = (row, column, board) => {
     if (!computer) {
-      if (board.getGrid()[row][column].hit === false) return -1;
+      if (board.checkHit(row, column)) return -1;
       board.receiveAttack(row, column);
     } else {
       let illegal = true;
@@ -16,7 +16,7 @@ const Player = (name) => {
             (move) => move.columnRand === columnRand
               && move.rowRand === rowRand,
           )
-          && board.getGrid()[rowRand][columnRand].hit !== false
+          && !board.checkHit(rowRand, columnRand)
         ) {
           aiMoves.push({ rowRand, columnRand });
           illegal = false;
