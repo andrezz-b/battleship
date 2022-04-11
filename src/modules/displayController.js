@@ -10,7 +10,7 @@ const displayController = (() => {
         tile.classList.add("tile");
         tile.dataset.row = row;
         tile.dataset.column = column;
-        if (board.getGrid()[row][column].type === "ship") {
+        if (board.getGrid()[row][column].type === "ship" && board.name !== "computer") {
           const ship = document.createElement("div");
           ship.classList.add("ship");
           tile.append(ship);
@@ -41,6 +41,7 @@ const displayController = (() => {
           if (current.hit !== undefined) {
             const child = playerBoardDiv.querySelector(`[data-row='${row}'][data-column='${column}']`).firstElementChild;
             if (current.hit === true) {
+              if (board.name === "computer") child.classList.add("ship");
               child.classList.add("hit");
             } else {
               child.classList.add("miss");
