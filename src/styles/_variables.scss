@@ -7,6 +7,11 @@
   flex-direction: $direction;
 }
 
+$fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
+
+@import "~@fortawesome/fontawesome-free/scss/fontawesome.scss";
+@import "~@fortawesome/fontawesome-free/scss/brands.scss";
+
 $ff-text: "Fredoka", sans-serif;
 
 $clr-ocean: lighten(#589fe6, 5%);
@@ -18,6 +23,7 @@ $clr-hit: #dc2f2f;
 $clr-hit-dk: darken(#fa7b7b, 20%);
 
 $clr-bg-dk: #303841;
+$clr-bg-lt: #f7f7f7;
 
 $clr-accent: #f9b248;
 
